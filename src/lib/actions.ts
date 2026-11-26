@@ -1,11 +1,6 @@
-import { Message } from '@/components/ChatWindow';
-
-export const getSuggestions = async (chatHisory: Message[]) => {
-  const chatModel = localStorage.getItem('chatModel');
-  const chatModelProvider = localStorage.getItem('chatModelProvider');
-
-  const customOpenAIKey = localStorage.getItem('openAIApiKey');
-  const customOpenAIBaseURL = localStorage.getItem('openAIBaseURL');
+export const getSuggestions = async (chatHistory: [string, string][]) => {
+  const chatModel = localStorage.getItem('chatModelKey');
+  const chatModelProvider = localStorage.getItem('chatModelProviderId');
 
   const res = await fetch(`/api/suggestions`, {
     method: 'POST',
@@ -13,14 +8,10 @@ export const getSuggestions = async (chatHisory: Message[]) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      chatHistory: chatHisory,
+      chatHistory,
       chatModel: {
-        provider: chatModelProvider,
-        model: chatModel,
-        ...(chatModelProvider === 'custom_openai' && {
-          customOpenAIKey,
-          customOpenAIBaseURL,
-        }),
+        providerId: chatModelProvider,
+        key: chatModel,
       },
     }),
   });
@@ -28,4 +19,18 @@ export const getSuggestions = async (chatHisory: Message[]) => {
   const data = (await res.json()) as { suggestions: string[] };
 
   return data.suggestions;
+};
+
+export const getApproxLocation = async () => {
+  const res = await fetch('https://free.freeipapi.com/api/json', {
+    method: 'GET',
+  });
+
+  const data = await res.json();
+
+  return {
+    latitude: data.latitude,
+    longitude: data.longitude,
+    city: data.cityName,
+  };
 };

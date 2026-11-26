@@ -1,23 +1,13 @@
 import ChatWindow from '@/components/ChatWindow';
-import { ChatProvider } from '@/lib/hooks/useChat';
 import { Metadata } from 'next';
-import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Chat - Perplexica',
-  description: 'Chat with the internet, chat with Perplexica.',
+  title: 'Chat - Vane',
+  description: 'Chat with the internet, chat with Vane.',
 };
 
 const Home = () => {
-  return (
-    <div>
-      <Suspense>
-        <ChatProvider>
-          <ChatWindow />
-        </ChatProvider>
-      </Suspense>
-    </div>
-  );
+  return <ChatWindow />;
 };
 
 export default Home;
